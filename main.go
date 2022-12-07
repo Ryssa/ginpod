@@ -5,8 +5,14 @@ import (
 	"fmt"
 	"html"
 	"net/http"
-
+	"io/ioutil"
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	API_URL = "https://online-movie-database.p.rapidapi.com"
+	API_HOST = "online-movie-database.p.rapidapi.com"
+	API_KEY = "7d3d096792msh5c3e9c52399075ep1c90e2jsn40a17c6879dd"
 )
 
 // HelloHTTP is an HTTP Cloud Function with a request parameter.
@@ -39,14 +45,25 @@ func main() {
 		})
 	})
 
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	router.GET("/movies/search", func(c *gin.Context) {
+		title := c.Query("title")
 
-	router.GET("/hello", func(c *gin.Context) {
-		HelloHTTP(c.Writer, c.Request)
+		url := API_URL + "/auto-complete?q=" + title
+		req, _ := http.NewRequest("GET", url, nil)
+
+		req.Header.Add("X-RapidAPI-Key", API_KEY)
+		req.Header.Add("X-RapidAPI-Host", API_HOST)
+
+		res, _ := http.DefaultClient.Do(req)
+
+		defer res.Body.Close()
+		body, _ := ioutil.ReadAll(res.Body)
+		var data interface{}
+		_ = json.Unmarshal(body, &data)
+
+		c.JSON(200, gin.H{
+			"result": data,
+		})
 	})
 
 	router.Run(":8080")
