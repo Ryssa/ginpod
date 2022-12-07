@@ -4,15 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
-	"net/http"
 	"io/ioutil"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 const (
-	API_URL = "https://online-movie-database.p.rapidapi.com"
+	API_URL  = "https://online-movie-database.p.rapidapi.com"
 	API_HOST = "online-movie-database.p.rapidapi.com"
-	API_KEY = "7d3d096792msh5c3e9c52399075ep1c90e2jsn40a17c6879dd"
+	API_KEY  = "XXXXXXXXXXXX"
 )
 
 // HelloHTTP is an HTTP Cloud Function with a request parameter.
